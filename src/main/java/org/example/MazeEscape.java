@@ -1,14 +1,14 @@
 package org.example;
 import java.util.Scanner;
 
-// Eccezione personalizzata per movimenti fuori dai limiti
+//Eccezione personalizzata per movimenti fuori dai limiti
 class OutOfBoundsException extends Exception {
 	public OutOfBoundsException(String message) {
 		super(message);
 	}
 }
 
-// Eccezione personalizzata per collisione con muri
+//Eccezione personalizzata per collisione con muri
 class WallCollisionException extends Exception {
 	public WallCollisionException(String message) {
 		super(message);
@@ -46,7 +46,8 @@ public class MazeEscape {
 				// Verificare se ha raggiunto l'uscita e terminare il gioco
 				if(playerX==4&&playerY==4) {
 					escaped=true;
-					System.out.println("hai vito");
+					System.out.println("hai vinto");
+                 printMaze();
 				}
 			} catch (OutOfBoundsException | WallCollisionException e) {
 				// Stampare il messaggio di errore dell'eccezione
@@ -66,29 +67,27 @@ public class MazeEscape {
 	 */
 	private static void movePlayer(char direction) throws OutOfBoundsException, WallCollisionException {
 		// Dichiarare nuove variabili per la posizione dopo il movimento
-		int newX = 0;
-		int newY = 0;
+		int newX = playerX;
+		int newY = playerY;
 		// Switch-case per aggiornare le nuove coordinate in base alla direzione
 		switch (direction) {
 		case 'W':
-			newX++;
+			newX--;
 			break;
 		case 'A':
 			newY--;
 			break;
 		case 'S':
-			newX--;
+			newX++;
 			break;
 		case 'D':
 			newY++;
 			break;
 		}
 		// Controllare se il movimento è fuori dalla matrice e lanciare OutOfBoundsException
-		if(newX<0||newX>5&&newY<0||newY>5) {
+		if(newX<0||newX>5||newY<0||newY>5) {
 			throw new OutOfBoundsException("stai uscendo dai bordi");
-		}
-		// Controllare se il movimento porta su un muro e lanciare WallCollisionException
-		if(LABIRINTO[newX][newY]=='#') {
+		}else if(LABIRINTO[newX][newY]=='#') {// Controllare se il movimento porta su un muro e lanciare WallCollisionException
 			throw new WallCollisionException("stai andando sul muro");
 		}
 		// Aggiornare la matrice con la nuova posizione del giocatore
